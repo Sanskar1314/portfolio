@@ -77,16 +77,14 @@ test("navigation updates the shared timeline and backward scrolling restores the
   });
   expect(errors).toEqual([]);
 });
-test("skill worlds are keyboard operable and reveal the selected technologies", async ({
+test("all skill worlds expose their tools without clicking", async ({
   page,
 }) => {
   await open(page);
-  await jump(page, "skills");
-  const button = page.getByRole("button", { name: "AI / ML", exact: true });
-  await button.focus();
-  await page.keyboard.press("Enter");
-  await expect(button).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".skill-readout")).toContainText("PyTorch");
+  await jump(page, "skills", 500);
+  await expect(page.locator(".tech-planet")).toHaveCount(5);
+  await expect(page.locator(".tech-planet-1")).toContainText("PyTorch");
+  await expect(page.locator(".skill-solar-system button")).toHaveCount(0);
 });
 test("project disclosures and source links work", async ({ page }) => {
   await open(page);
@@ -139,8 +137,9 @@ test("mobile navigation, skills and final contact fit without horizontal overflo
   await expect(
     page.getByRole("button", { name: "Toggle navigation" }),
   ).toHaveAttribute("aria-expanded", "false");
-  await page.getByRole("button", { name: "Data Science", exact: true }).click();
-  await expect(page.locator(".skill-readout")).toContainText("Pandas");
+  await page.locator(".tech-planet-4").scrollIntoViewIfNeeded();
+  await expect(page.locator(".tech-planet-4")).toContainText("Pandas");
+  await expect(page.locator(".tech-planet-4")).toBeInViewport();
   for (const id of ["work", "experience", "achievements", "contact"]) {
     await jump(page, id, 150);
     expect(
@@ -226,7 +225,7 @@ test("chapter boundaries blend continuously while keeping one persistent suit", 
     );
     await expect
       .poll(async () =>
-        Number(await page.locator(".traveler").getAttribute("data-progress")),
+        Number(await page.locator("canvas").getAttribute("data-progress")),
       )
       .toBeCloseTo(p, 3);
     samples.push(
@@ -239,8 +238,9 @@ test("chapter boundaries blend continuously while keeping one persistent suit", 
           getComputedStyle(document.querySelector("#launch .scene-content")!)
             .opacity,
         ),
-        traveler: document.querySelector(".traveler")!.getBoundingClientRect()
-          .height,
+        traveler: Number(
+          document.querySelector("canvas")!.getAttribute("data-traveler-z"),
+        ),
       })),
     );
   }
@@ -251,7 +251,8 @@ test("chapter boundaries blend continuously while keeping one persistent suit", 
   expect(samples[1].hero).toBeGreaterThan(0.1);
   expect(samples[1].launch).toBeGreaterThan(0.1);
   expect(Math.abs(samples[2].traveler - samples[0].traveler)).toBeLessThan(120);
-  await expect(page.locator(".traveler")).toHaveCount(1);
+  await expect(page.locator(".traveler")).toHaveCount(0);
+  await expect(page.locator(".hero-portrait")).toBeHidden();
   await expect(page.locator("canvas")).toHaveAttribute(
     "data-traveler-3d",
     "true",
@@ -264,10 +265,8 @@ test("feedback viewport keeps skill selectors and project content readable", asy
   await page.setViewportSize({ width: 662, height: 771 });
   await open(page);
   await jump(page, "skills", 500);
-  await expect(page.locator(".skill-selectors")).toBeInViewport();
-  await expect(page.locator(".skill-readout")).toBeInViewport();
-  await page.getByRole("button", { name: "AI / ML", exact: false }).click();
-  await expect(page.locator(".skill-readout")).toContainText("PyTorch");
+  await expect(page.locator(".skill-solar-system")).toBeInViewport();
+  await expect(page.locator(".tech-planet-1")).toContainText("PyTorch");
   await jump(page, "sigmalearn", 400);
   await expect(page.locator("#sigmalearn .live-link")).toBeInViewport();
   expect(
@@ -322,16 +321,14 @@ test("3D traveler moves forward without changing its screen lane", async ({
     );
     await expect
       .poll(async () =>
-        Number(await page.locator(".traveler").getAttribute("data-progress")),
+        Number(await page.locator("canvas").getAttribute("data-progress")),
       )
       .toBeCloseTo(p, 3);
     poses.push(
-      await page
-        .locator("canvas")
-        .evaluate((c) => ({
-          x: Number(c.getAttribute("data-traveler-x")),
-          z: Number(c.getAttribute("data-traveler-z")),
-        })),
+      await page.locator("canvas").evaluate((c) => ({
+        x: Number(c.getAttribute("data-traveler-x")),
+        z: Number(c.getAttribute("data-traveler-z")),
+      })),
     );
   }
   expect(new Set(poses.map((p) => p.x)).size).toBe(1);
@@ -339,25 +336,28 @@ test("3D traveler moves forward without changing its screen lane", async ({
     expect(poses[i].z).toBeLessThan(poses[i - 1].z);
 });
 
-test("focused skills preserve every category and its tools", async ({
+test("solar system preserves every technology label at desktop and phone sizes", async ({
   page,
 }) => {
-  await page.goto("/#skills");
-  await expect(page.locator("#skills .scene-content")).not.toHaveAttribute(
-    "inert",
-    "",
-  );
-  for (const label of [
-    "Languages",
-    "AI / ML",
-    "NLP & LLMs",
-    "Tools & Frameworks",
-    "Data Science",
-  ]) {
-    await page.getByRole("button", { name: label, exact: true }).click();
-    await expect(page.locator(".skill-readout h3")).toHaveText(label);
-    await expect(page.locator(".skill-tools span").first()).toBeVisible();
-    await page.locator(".skill-description summary").click();
-    await expect(page.locator(".skill-description p")).toBeVisible();
+  for (const width of [1126, 390]) {
+    await page.setViewportSize({ width, height: 771 });
+    await page.goto("/#skills");
+    await expect(page.locator("#skills .scene-content")).not.toHaveAttribute(
+      "inert",
+      "",
+    );
+    for (const label of [
+      "Languages",
+      "AI / ML",
+      "NLP & LLMs",
+      "Tools & Frameworks",
+      "Data Science",
+    ]) {
+      const planet = page.getByRole("article", { name: label, exact: true });
+      await planet.scrollIntoViewIfNeeded();
+      await expect(planet).toBeInViewport();
+      await expect(planet.locator("li").first()).toBeVisible();
+    }
+    await expect(page.locator(".tech-planet li")).toHaveCount(29);
   }
 });

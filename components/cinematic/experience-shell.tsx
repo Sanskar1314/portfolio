@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import { Traveler } from "./traveler";
 import { siteConfig } from "@/lib/content";
 import {
   type ReactNode,
@@ -242,7 +241,6 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
           }}
         />
       )}
-      {mode === "cinematic" && !failure && <Traveler paused={paused} />}
       <main id="main-content">{children}</main>
       <aside className="flight-controls" aria-label="Display settings">
         <button onClick={toggleMode}>

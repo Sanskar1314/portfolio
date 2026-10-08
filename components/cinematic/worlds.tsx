@@ -136,7 +136,6 @@ function Planet({
 export function Worlds({ paused, low }: { paused: boolean; low: boolean }) {
   return (
     <>
-      <Planet index={3} color={colors[0]} paused={paused} low={low} skill />
       <Planet index={4} color="#cb9972" paused={paused} low={low} />
       <Planet index={5} color="#79afd9" paused={paused} low={low} />
       <Planet index={6} color="#80b5a8" paused={paused} low={low} />

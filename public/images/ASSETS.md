@@ -27,3 +27,7 @@ Exact prompt:
 > Use case: stylized-concept. Asset type: high-resolution equirectangular albedo texture for a rotating real-time 3D planet. Generate a very sharp 2:1 rectangular planetary surface map, edge-to-edge coverage, NOT a picture of a sphere. Oceanic alien blue world with intricate ivory ice coastlines, dark navy oceans, cobalt shallow seas, rugged mineral islands, delicate white atmospheric cloud filaments and circular storm systems. Rich fine-scale satellite detail, crisp coastlines, natural geological variation. Flat even illumination with no baked directional light, no shadow, no horizon, no space background, no text, no labels. Seamless left/right boundary, polar regions at top and bottom. Cinematic realistic orbital photography aesthetic. Output 3072x1536 if available.
 
 The traveling suit is now original volumetric geometry authored in `components/cinematic/astronaut-3d.tsx`, with smooth helmet, articulated limbs, backpack, fittings, and hoses. The generated portrait is retained at the opening and fades face-on before departure; neither front nor rear image is rotated edge-on. The rear photographic asset is retained as an unused reference.
+
+
+## Consistent 3D journey — revision 4
+The cinematic opening now uses the same volumetric suit as every subsequent scene. The photographic portrait is retained only for reader mode; the photo-to-model crossfade and DOM traveler have been removed. Solar-system skill planets reuse the generated surface texture, with category names and every technology rendered as accessible HTML on each world.

@@ -72,7 +72,7 @@ export function Astronaut3D({ paused }: { paused: boolean }) {
     if (!paused) idle.current += dt;
     const p = timeline.progress,
       small = size.width < 900;
-    const alpha = smooth(0.045, 0.075, p);
+    const alpha = 1;
     root.current.visible = alpha > 0.001;
     if (!root.current.visible) return;
     // All travel after launch is along the depth axis. No chapter-specific left/right stops.
@@ -82,17 +82,15 @@ export function Astronaut3D({ paused }: { paused: boolean }) {
       new THREE.Vector3(0, 0, z),
     );
     const y =
-      (small ? 0.13 : -0.04) +
-      ((small ? -0.41 : -0.37) - (small ? 0.13 : -0.04)) *
-        smooth(0.07, 0.24, p);
+      (small ? 0.13 : 0.02) +
+      ((small ? -0.41 : -0.37) - (small ? 0.13 : 0.02)) * smooth(0.07, 0.24, p);
     root.current.position.set(
       view.width * (small ? -0.21 : -0.25),
       view.height * y,
       z,
     );
     root.current.scale.setScalar(
-      (small ? 1.05 : 1.35) *
-        (1 - smooth(0.1, 0.24, p) * (small ? 0.42 : 0.12)),
+      (small ? 1.05 : 1.2) * (1 - smooth(0.1, 0.24, p) * (small ? 0.42 : 0.12)),
     );
     body.current.rotation.set(
       -0.1 * smooth(0.07, 0.2, p),
@@ -106,6 +104,7 @@ export function Astronaut3D({ paused }: { paused: boolean }) {
         m.opacity = alpha;
       }
     });
+    gl.domElement.setAttribute("data-progress", p.toFixed(5));
     gl.domElement.setAttribute("data-traveler-z", z.toFixed(3));
     gl.domElement.setAttribute(
       "data-traveler-x",

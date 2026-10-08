@@ -2127,3 +2127,218 @@ summary:hover {
     display: none;
   }
 }
+
+/* Five labeled worlds: every technology is visible without selecting a category. */
+.skill-solar-system {
+  position: absolute;
+  inset: 31% 7% 9%;
+}
+.solar-orbits {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.solar-orbits i {
+  position: absolute;
+  border: 1px solid #819ab52c;
+  border-radius: 50%;
+  inset: 12% -3%;
+  transform: rotate(-14deg);
+}
+.solar-orbits i:nth-child(2) {
+  inset: 2% 8%;
+  transform: rotate(12deg);
+}
+.solar-orbits i:nth-child(3) {
+  inset: 22% -6%;
+  transform: rotate(5deg);
+}
+.solar-planets {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: 12px 7%;
+}
+.tech-planet {
+  position: relative;
+  flex: 0 0 min(23%, 220px);
+  aspect-ratio: 1;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+}
+.tech-planet:nth-child(4) {
+  margin-left: 12%;
+}
+.tech-planet:last-child {
+  margin-right: 12%;
+}
+.tech-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 30% 23%, #a7d8f520, #06152265 40%, #01080be8 92%),
+    url("/images/planet-ocean.webp");
+  background-size:
+    cover,
+    220% 100%;
+  box-shadow:
+    inset 2px 2px 6px #c4e5ff77,
+    inset -16px -8px 30px #000a,
+    0 0 25px #628db518;
+  border: 1px solid #a5d6f344;
+}
+.tech-planet-1 .tech-surface {
+  filter: sepia(0.65) hue-rotate(340deg);
+  background-position:
+    center,
+    30% 50%;
+}
+.tech-planet-2 .tech-surface {
+  filter: hue-rotate(27deg);
+  background-position:
+    center,
+    60% 50%;
+}
+.tech-planet-3 .tech-surface {
+  filter: hue-rotate(310deg);
+  background-position:
+    center,
+    80% 50%;
+}
+.tech-planet-4 .tech-surface {
+  filter: sepia(0.3) hue-rotate(35deg);
+  background-position:
+    center,
+    100% 50%;
+}
+.tech-label {
+  padding: 14% 9%;
+  width: 100%;
+  text-align: center;
+  text-shadow:
+    0 1px 7px #000,
+    0 0 12px #000;
+}
+.tech-number {
+  font: 7px var(--font-mono);
+  letter-spacing: 2px;
+  color: #bacddd;
+}
+.tech-label h3 {
+  font-size: clamp(13px, 1.4vw, 18px);
+  margin: 6px 0 10px;
+  color: #fff9ec;
+  font-weight: 500;
+}
+.tech-label ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.tech-label li {
+  font-size: clamp(9px, 0.95vw, 12px);
+  line-height: 1.45;
+  color: #e4edf3;
+}
+.cinematic-mode #skills .skills-heading {
+  top: 19%;
+}
+.cinematic-mode #skills .skills-heading h2 {
+  font-size: clamp(30px, 3vw, 42px);
+}
+.cinematic-mode #skills .skills-heading h2 br {
+  display: none;
+}
+.reader-mode .skill-solar-system {
+  display: none;
+}
+@media (max-width: 900px) {
+  .skill-solar-system {
+    inset: 32% 5% 10%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #68879b transparent;
+  }
+  .solar-planets {
+    height: auto;
+    min-height: 100%;
+    align-content: start;
+    gap: 18px 6%;
+    padding: 12px 0 24px;
+  }
+  .tech-planet {
+    flex-basis: min(44%, 230px);
+  }
+  .tech-planet:nth-child(4),
+  .tech-planet:last-child {
+    margin: 0;
+  }
+  .tech-label h3 {
+    font-size: 16px;
+  }
+  .tech-label li {
+    font-size: 11px;
+  }
+  .solar-orbits {
+    inset: 0 2% -50%;
+  }
+}
+@media (max-width: 559px) {
+  .skill-solar-system {
+    inset: 31% 4% 10%;
+  }
+  .solar-planets {
+    gap: 24px;
+  }
+  .tech-planet {
+    flex-basis: 235px;
+  }
+  .tech-label h3 {
+    font-size: 19px;
+  }
+  .tech-label li {
+    font-size: 13px;
+  }
+  .tech-planet:nth-child(odd) {
+    margin-right: 12%;
+  }
+  .tech-planet:nth-child(even) {
+    margin-left: 12%;
+  }
+}
+.cinematic-mode #skills .skills-heading {
+  top: 21%;
+}
+.cinematic-mode #skills .skills-heading em {
+  margin-left: 0.18em;
+}
+@media (min-width: 901px) {
+  .skill-solar-system {
+    top: 35%;
+  }
+  .tech-planet {
+    flex-basis: min(22%, 205px);
+  }
+}
+@media (max-width: 559px) {
+  .cinematic-mode #skills .skills-heading {
+    top: 18%;
+  }
+  .cinematic-mode #skills .skills-heading h2 br {
+    display: initial;
+  }
+  .cinematic-mode #skills .skills-heading em {
+    margin-left: 0;
+  }
+}
