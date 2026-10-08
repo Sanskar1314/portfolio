@@ -3,6 +3,8 @@ export const siteConfig = {
   role: "Data Science Student & AI Builder",
   location: "Ghaziabad, Uttar Pradesh, India",
   email: "sanskargupta1314@gmail.com",
+  resume:
+    "https://drive.google.com/file/d/1kDzGB_21uUpgiVoKk-TimiH8v0K1r9lF/view?usp=drive_link",
   phone: "+91-7985674096",
   github: "https://github.com/Sanskar1314",
   linkedin: "https://www.linkedin.com/in/sanskar-gupta-0a7b3529a/",
@@ -47,13 +49,29 @@ export const skillGroups = [
   },
   {
     label: "Tools & Frameworks",
-    skills: ["Whisper", "BGE-M3", "FastAPI", "Streamlit", "Flask", "Git", "AWS", "n8n", "Docker"],
+    skills: [
+      "Whisper",
+      "BGE-M3",
+      "FastAPI",
+      "Streamlit",
+      "Flask",
+      "Git",
+      "AWS",
+      "n8n",
+      "Docker",
+    ],
   },
   {
     label: "Data Science",
     skills: ["Pandas", "NumPy", "Matplotlib", "Seaborn", "BeautifulSoup"],
   },
 ];
+
+export const education = {
+  degree: "B.Tech · Data Science",
+  institution: "ABES Engineering College",
+  years: "2023 — 2027",
+};
 
 export const projects = [
   {
@@ -74,18 +92,19 @@ export const projects = [
   },
   {
     number: "02",
-    title: "TeachRAG",
+    title: "SigmaLearn AI",
     eyebrow: "RAG-Based AI Teaching Assistant",
     date: "August 2025",
     description:
       "A teaching assistant that transforms course-video audio into a searchable knowledge base for grounded student answers.",
     details: [
-      "Used Whisper transcription and BGE-M3 embeddings through Ollama to build the retrieval layer.",
-      "Integrated Gemini API answer generation with prompting designed for contextual, retrieval-grounded responses.",
-      "Delivered a full-stack Streamlit and Flask workflow for dynamic retrieval and real-time student queries.",
+      "Transcribed course videos with Whisper and built a searchable collection of subtitle chunks.",
+      "Grounded Gemini-generated answers in retrieved course material with exact video timestamps.",
+      "Shipped a Next.js and React chat interface with source cards, deployed on Vercel.",
     ],
-    stack: ["Python", "Whisper", "Ollama", "Gemini API", "Streamlit", "Flask"],
+    stack: ["Python", "Next.js", "React", "Gemini API", "Whisper", "RAG"],
     github: "https://github.com/Sanskar1314/RAG_Based_Teaching_Assistant",
+    live: "https://sigmalearn-ai.vercel.app",
     accent: "cyan",
   },
 ];
@@ -122,8 +141,18 @@ export const achievements = [
 ];
 
 export const certifications = [
-  { title: "AWS Certified Cloud Practitioner (CLF-C02)", issuer: "Amazon Web Services", date: "Aug 2025", link: "https://drive.google.com/file/d/1E35PKVpXpCqVBpWM3JIJyJfPAVj8h3cz/view?usp=drive_link" },
-  { title: "Data Science Job Ready Course", issuer: "Code With Harry", date: "Oct 2025", link: "https://drive.google.com/file/d/14Higs2_75FCcH3eIxsk0wvSIh25YnI0b/view?usp=drive_link" },
+  {
+    title: "AWS Certified Cloud Practitioner (CLF-C02)",
+    issuer: "Amazon Web Services",
+    date: "Aug 2025",
+    link: "https://drive.google.com/file/d/1E35PKVpXpCqVBpWM3JIJyJfPAVj8h3cz/view?usp=drive_link",
+  },
+  {
+    title: "Data Science Job Ready Course",
+    issuer: "Code With Harry",
+    date: "Oct 2025",
+    link: "https://drive.google.com/file/d/14Higs2_75FCcH3eIxsk0wvSIh25YnI0b/view?usp=drive_link",
+  },
   {
     title: "Complete Data Science, Machine Learning, DL, NLP Bootcamp",
     issuer: "Krish Naik — Udemy",
