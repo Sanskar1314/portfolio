@@ -1,6 +1,7 @@
 "use client";
 import {
   Component,
+  Suspense,
   type ReactNode,
   useEffect,
   useMemo,
@@ -9,6 +10,7 @@ import {
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { Astronaut3D } from "./astronaut-3d";
 import { Worlds } from "./worlds";
 import { smooth, timeline } from "@/lib/timeline";
 import { screenVertex, spaceFragment } from "@/lib/shaders/space";
@@ -170,7 +172,7 @@ export default function Universe({
       <Boundary onFailure={onFailure}>
         <Canvas
           dpr={low ? 1 : [1, 1.5]}
-          camera={{ position: [0, 0, 7], fov: 45, near: 0.1, far: 75 }}
+          camera={{ position: [0, 0, 7], fov: 45, near: 0.1, far: 150 }}
           gl={{
             antialias: !low,
             alpha: false,
@@ -192,7 +194,10 @@ export default function Universe({
           />
           <pointLight position={[4, -1, 2]} intensity={8} color="#c48b52" />
           <Starfield low={low} paused={paused} />
-          <Worlds low={low} paused={paused} />
+          <Suspense fallback={null}>
+            <Worlds low={low} paused={paused} />
+          </Suspense>
+          <Astronaut3D paused={paused} />
           <CameraRig low={low} onFailure={onFailure} />
         </Canvas>
       </Boundary>

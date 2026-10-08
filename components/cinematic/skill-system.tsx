@@ -16,7 +16,7 @@ export function SkillSystem() {
     selectSkill(index);
   }
   return (
-    <div className="skill-system skill-system-v2">
+    <div className="skill-system skill-system-v2 skill-focus">
       <div className="skill-map" aria-hidden="true">
         <span className="system-orbit system-orbit-a" />
         <span className="system-orbit system-orbit-b" />
@@ -34,31 +34,33 @@ export function SkillSystem() {
             key={group.label}
             className={`skill-node ${selected === index ? "selected" : ""}`}
             aria-label={group.label}
+            title={group.label}
             aria-pressed={selected === index}
             onClick={() => choose(index)}
           >
             <span className="node-index">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span>{group.label}</span>
-            <span className="node-arrow" aria-hidden="true">
-              ↗
-            </span>
+            <span className="node-label">{group.label}</span>
           </button>
         ))}
       </div>
       <div className="skill-readout" aria-live="polite">
         <p className="eyebrow">
-          {String(selected + 1).padStart(2, "0")} /{" "}
-          {skillGroups[selected].label}
+          FIELD {String(selected + 1).padStart(2, "0")} / 05
         </p>
-        <h3>{descriptions[selected]}</h3>
+        <h3>{skillGroups[selected].label}</h3>
         <div className="skill-tools">
           {skillGroups[selected].skills.map((skill) => (
             <span key={skill}>{skill}</span>
           ))}
         </div>
-        <span className="subtle">Select a field to explore.</span>
+        <details className="skill-description" key={selected}>
+          <summary>
+            About this field <span aria-hidden="true">+</span>
+          </summary>
+          <p>{descriptions[selected]}</p>
+        </details>
       </div>
     </div>
   );

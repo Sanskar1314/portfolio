@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { sceneBlend, skillState, timeline } from "@/lib/timeline";
 import {
@@ -22,6 +22,7 @@ function Planet({
   low: boolean;
   skill?: boolean;
 }) {
+  const texture = useLoader(THREE.TextureLoader, "/images/planet-ocean.webp");
   const group = useRef<THREE.Group>(null),
     surface = useRef<THREE.Mesh>(null),
     material = useRef<THREE.ShaderMaterial>(null),
@@ -29,11 +30,12 @@ function Planet({
   const uniforms = useMemo(
     () => ({
       uColor: { value: new THREE.Color(color) },
+      uMap: { value: texture },
       uTime: { value: 0 },
       uOpacity: { value: 0 },
       uKind: { value: index - 4 },
     }),
-    [color, index],
+    [color, index, texture],
   );
   const air = useMemo(
     () => ({
@@ -62,7 +64,15 @@ function Planet({
       material.current.uniforms.uTime.value += dt;
     }
     const side = index === 5 ? -1 : 1;
-    const x = skill ? (compact ? -0.23 : -0.19) : small ? 0.2 : side * 0.29;
+    const x = skill
+      ? small
+        ? 0
+        : compact
+          ? -0.23
+          : -0.19
+      : small
+        ? 0.2
+        : side * 0.29;
     const y = skill ? (compact ? -0.015 : -0.09) : small ? 0.24 : 0;
     const radius = skill
       ? compact

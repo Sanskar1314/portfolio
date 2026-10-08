@@ -43,7 +43,7 @@ test("loads the real-time universe and local assets without console errors", asy
   ).toBeTruthy();
   for (const path of [
     "/images/astronaut.webp",
-    "/images/astronaut-rear.webp",
+    "/images/planet-ocean.webp",
     "/credits.html",
     "/favicon.svg",
   ])
@@ -252,9 +252,9 @@ test("chapter boundaries blend continuously while keeping one persistent suit", 
   expect(samples[1].launch).toBeGreaterThan(0.1);
   expect(Math.abs(samples[2].traveler - samples[0].traveler)).toBeLessThan(120);
   await expect(page.locator(".traveler")).toHaveCount(1);
-  await expect(page.locator(".traveler-rear img")).toHaveAttribute(
-    "src",
-    /astronaut-rear/,
+  await expect(page.locator("canvas")).toHaveAttribute(
+    "data-traveler-3d",
+    "true",
   );
 });
 
@@ -304,4 +304,60 @@ test("direct chapter URLs settle beyond the crossfade on phones", async ({
       ),
     )
     .toBeLessThan(0.001);
+});
+
+test("3D traveler moves forward without changing its screen lane", async ({
+  page,
+}) => {
+  await open(page);
+  const poses: { x: number; z: number }[] = [];
+  for (const p of [0.18, 0.31, 0.51, 0.9]) {
+    await page.evaluate(
+      (p) =>
+        scrollTo({
+          top: (document.documentElement.scrollHeight - innerHeight) * p,
+          behavior: "instant",
+        }),
+      p,
+    );
+    await expect
+      .poll(async () =>
+        Number(await page.locator(".traveler").getAttribute("data-progress")),
+      )
+      .toBeCloseTo(p, 3);
+    poses.push(
+      await page
+        .locator("canvas")
+        .evaluate((c) => ({
+          x: Number(c.getAttribute("data-traveler-x")),
+          z: Number(c.getAttribute("data-traveler-z")),
+        })),
+    );
+  }
+  expect(new Set(poses.map((p) => p.x)).size).toBe(1);
+  for (let i = 1; i < poses.length; i++)
+    expect(poses[i].z).toBeLessThan(poses[i - 1].z);
+});
+
+test("focused skills preserve every category and its tools", async ({
+  page,
+}) => {
+  await page.goto("/#skills");
+  await expect(page.locator("#skills .scene-content")).not.toHaveAttribute(
+    "inert",
+    "",
+  );
+  for (const label of [
+    "Languages",
+    "AI / ML",
+    "NLP & LLMs",
+    "Tools & Frameworks",
+    "Data Science",
+  ]) {
+    await page.getByRole("button", { name: label, exact: true }).click();
+    await expect(page.locator(".skill-readout h3")).toHaveText(label);
+    await expect(page.locator(".skill-tools span").first()).toBeVisible();
+    await page.locator(".skill-description summary").click();
+    await expect(page.locator(".skill-description p")).toBeVisible();
+  }
 });

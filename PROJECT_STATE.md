@@ -9,7 +9,7 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - Server-rendered content defaults to reader mode (works without JavaScript). After hydration, reduced-motion users stay in reader mode; others enter the cinematic mode.
 - Native sections are scroll tracks. Twelve fixed scene panels share one normalized, damped timeline with WebGL. No scroll interception or speed-dependent animation. Native hash links work forward/backward.
 - Desktop 900 star streaks; mobile 280, reduced sphere tessellation, fewer procedural noise samples, DPR 1. Measured frame time can reduce DPR further.
-- Persistent identity-matched front/rear 2.5D traveler; continuous reversible chapter crossfades. Procedural planet surfaces, nebula, stars, hyperspace and analytical lensing/accretion-disk shader.
+- Face-on portrait dissolves into an original volumetric 3D suit; fixed screen lane and forward depth travel; continuous reversible chapter crossfades. Generated high-detail surface map on rotating planets; procedural nebula, stars, hyperspace and flowing analytical accretion disk.
 - No audio, external runtime generation service, API key or environment variable required.
 
 ## Repository Map
@@ -20,21 +20,22 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - lib/timeline.ts: chapter durations and shared animation state; small boundary tolerance handles fractional CSS pixels
 - components/cinematic/experience-shell.tsx: navigation, display modes, timeline and pinned panels
 - components/cinematic/universe.tsx: Canvas, adaptive DPR, stars, worlds, context-loss handling
-- components/cinematic/traveler.tsx: persistent front/rear suit, continuous position/scale/turn
+- components/cinematic/traveler.tsx: opening portrait fade (never rotates edge-on)
+- components/cinematic/astronaut-3d.tsx: original mesh suit and forward-only depth travel
 - components/cinematic/worlds.tsx: independently blended, lit procedural skill/project planets
 - components/cinematic/skill-system.tsx: keyboard/touch skill worlds and disclosure
 - lib/shaders/space.ts: original procedural GLSL
 - public/images/ASSETS.md: complete generation prompt/provenance
 - public/models/astronaut.glb and public/credits.html: optimized model and required attribution
 - scripts/optimize-model.mjs: reproducible texture recompression / GLB repacking
-- tests/portfolio.spec.ts and playwright.config.ts: 14 browser regression tests
+- tests/portfolio.spec.ts and playwright.config.ts: 16 browser regression tests
 - docs/previews/: production desktop hero, black-hole and review-viewport screenshots
 - README.md / AGENTS.md: setup, deployment, durable agent instructions
 
 ## Completed
 - Existing app/branding/factual-source audit; npm preserved; dead former UI components and unused dependencies removed.
 - All twelve chapters: hero, acceleration, about, skills, three missions, nebula, journey, achievements, deep space, finale/contact.
-- Supplied-face hero asset; persistent two-sided traveler; gold disk with lensed arcs and background-star distortion.
+- Supplied-face hero asset; volumetric 3D traveler; gold disk with lensed arcs and background-star distortion.
 - Skill selection, project disclosures, résumé, GitHub, LinkedIn, email and verified SigmaLearn live link.
 - Desktop/mobile navigation, backward scrolling, direct hash links, pause idle animation, full reading mode.
 - Reduced-motion default, no-JavaScript content, WebGL context-loss fallback, keyboard interaction, small-phone overflow handling.
@@ -42,15 +43,16 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - Successful production build, static prerender, TypeScript, lint, browser suite and production smoke test.
 
 ## In Progress
-Complete. Production preview refreshed following user visual feedback. All four revisions implemented: matching suit, shared chapter crossfades, redesigned skills, brighter unobscured project planets.
+Complete. Production preview refreshed following user visual feedback. Second feedback round implemented: volumetric suit; fixed-lane depth movement; one-field skills navigator preserving every tool and description; generated sharp planet texture; flowing black-hole light.
 
 ## Remaining
 - User visual review, particularly likeness and the revised continuous transitions.
 - Physical iOS/Safari/Android GPU testing is not performed; mobile Chrome viewport emulation is verified.
 - Vercel deployment is not performed. Use the portfolio directory as root, Next.js preset; no env required.
-- Optional visual refinement: bespoke identity-matched/rigged 3D suit, more elaborate physically based lensing, richer per-project world geometry. Current versions are functional approximations.
+- Optional visual refinement: scanned/facially rigged astronaut likeness, more elaborate physically based lensing, richer per-project world geometry. Current versions are functional approximations.
 
 ## Generated Assets
+- public/images/planet-ocean-original.png and planet-ocean.webp: built-in imagegen equirectangular texture; exact prompt in ASSETS.md; WebP about 652 KB.
 - public/images/astronaut-original.png: built-in imagegen, one identity-preserve generation using the actual user photo; preserved original.
 - public/images/astronaut.webp: final delivery encoding, approximately 224 KB; same generated image. Full prompt in ASSETS.md.
 - public/images/astronaut-rear-original.png and astronaut-rear.webp: built-in imagegen matching rear suit, optimized locally; exact prompt in ASSETS.md.
@@ -66,20 +68,20 @@ Complete. Production preview refreshed following user visual feedback. All four 
 - Never put side-effectful fallback components inside Canvas fallback: its fallback DOM children may mount even when WebGL works.
 
 ## Known Problems / Compromises
-- Traveler uses two photographic plates in a 2.5D turn, not a facially rigged 3D avatar. The mismatched prototype GLB has been retired from rendering.
-- Lensing is a physically inspired analytical approximation, not ray-traced general relativity. Skills use accessible editorial selectors controlling one real-time planet.
+- The volumetric suit is an original stylized mesh model, not a scan or facially rigged likeness. The opening portrait stays photographic and dissolves before the 3D turn. Previous rear plate and GLB are retained unused.
+- Lensing is a physically inspired analytical approximation, not ray-traced general relativity. Skills use five compact accessible controls, one field and its full tools, and a description disclosure.
 - No verified Brain Tumor Detection publication URL or MovieMind live demo was found. Existing résumé/certification Drive and LinkedIn URLs retained; their authenticated/private content was not independently verified.
 - Five development-only npm audit advisories remain in eslint-config-next → fast-glob → braces, with no compatible upstream fix offered. Do not force-downgrade Next lint tooling. Production audit reports zero.
 - Machine Homebrew Node fails loading libsimdjson. Use a working Node or /Users/sanskar/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node (put its directory first on PATH). This is not required on Vercel.
 
 ## Testing Status
-Verified 2026-10-08 (Asia/Kolkata):
+Verified 2026-10-09 (Asia/Kolkata):
 - dev: verified on http://127.0.0.1:3000; production preview uses port 3001.
 - lint: pass; TypeScript: pass.
 - production build: pass, Next.js 16.4.0, static / and /_not-found.
-- browser suite: 14/14 pass using PLAYWRIGHT_CHANNEL=chrome npm test.
-- responsive: 1440×900/1000, review viewport 662×771, 390×844 and 360×640; no horizontal overflow, disclosures remain reachable.
-- behaviors: forward/backward navigation, skill keyboard activation, project details, reader toggle, pause, reduced motion, context loss and JavaScript disabled verified.
+- browser suite: 16/16 pass using PLAYWRIGHT_CHANNEL=chrome npm test.
+- responsive: 1440×900/1000, review viewports 1126×771 and 662×771, 390×844 and 360×640; no horizontal overflow, disclosures remain reachable.
+- behaviors: fixed-lane forward 3D travel, all five focused skill categories, light-flow/pause screenshot comparison (moving pixel difference 6.85; paused 0), forward/backward navigation, skill keyboard activation, project details, reader toggle, pause, reduced motion, context loss and JavaScript disabled verified.
 - production server: http://127.0.0.1:3001. Direct #skills/#sigmalearn/#nebula/#contact verified; no console errors. Frame sampling is local headless Chrome only, not a physical-device benchmark.
 - production dependencies: npm audit --omit=dev reports zero vulnerabilities.
 - Git diff whitespace check: pass. Original branding/photo assets preserved.

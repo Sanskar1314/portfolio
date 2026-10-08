@@ -45,12 +45,18 @@ void main(){
    // Lensed back disk appears above and below the event horizon.
    float band=abs(r-(.52+.025*sin(angle*2.)));
    float warp=exp(-band*55.)*(.3+.7*abs(sin(angle)));
-   float lanes=fbm(vec2(angle*10.+uTime*.07,r*65.));
+   float orbital=angle-uTime*.32;
+   float lanes=fbm(vec2(cos(orbital)*7.,sin(orbital)*7.)+r*65.);
    vec2 disk=vec2(q.x,q.y*6.5+.12*sin(q.x*2.));
    float dr=length(disk);
    float diskMask=smoothstep(.47,.57,dr)*(1.-smoothstep(1.2,2.2,dr));
-   float turbulence=fbm(vec2(dr*35.-uTime*.10,atan(disk.y,disk.x)*5.));
-   float diskLight=diskMask*(.22+pow(turbulence,2.)*2.3)/max(.7,dr*dr);
+   float da=atan(disk.y,disk.x);
+   float flow=da-uTime*(.48/pow(max(dr,.5),1.5));
+   float turbulence=fbm(vec2(cos(flow),sin(flow))*9.+dr*35.);
+   float filaments=.5+.5*sin(dr*180.+turbulence*7.+flow*3.);
+   float hotspot=pow(max(0.,cos(flow-.7)),12.);
+   float diskLight=diskMask*(.16+pow(turbulence,2.)*2.7+filaments*.17+hotspot*.28)/max(.7,dr*dr);
+   diskLight*=1.+.28*cos(da);
    float front=step(q.y,0.);diskLight*=mix(smoothstep(horizon,horizon+.025,r),1.,front);
    float beams=exp(-abs(q.y+.012)*40.)*exp(-abs(q.x)*1.1)*smoothstep(.43,.53,abs(q.x));
    vec3 gold=vec3(1.,.42,.105);vec3 hot=vec3(1.,.88,.63);
@@ -66,22 +72,18 @@ void main(){
  col*=1.-.28*length(vUv-.5);
  gl_FragColor=vec4(col,1.);
 }`;
-export const planetVertex = `varying vec3 vNormal;varying vec3 vPosition;void main(){vNormal=normalize(normalMatrix*normal);vPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
-export const planetFragment = `precision highp float;varying vec3 vNormal;varying vec3 vPosition;uniform vec3 uColor;uniform float uTime;uniform float uOpacity;uniform float uKind;
-float hash(vec3 p){return fract(sin(dot(p,vec3(17.1,61.7,12.4)))*43758.54);}
-float noise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(mix(hash(i),hash(i+vec3(1,0,0)),f.x),mix(hash(i+vec3(0,1,0)),hash(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash(i+vec3(0,0,1)),hash(i+vec3(1,0,1)),f.x),mix(hash(i+vec3(0,1,1)),hash(i+vec3(1,1,1)),f.x),f.y),f.z);}
+export const planetVertex = `varying vec2 vMapUv;varying vec3 vNormal;varying vec3 vPosition;void main(){vMapUv=uv;vNormal=normalize(normalMatrix*normal);vPosition=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+export const planetFragment = `precision highp float;
+varying vec2 vMapUv; varying vec3 vNormal; varying vec3 vPosition;
+uniform sampler2D uMap; uniform vec3 uColor; uniform float uOpacity; uniform float uKind;
 void main(){
  vec3 normal=normalize(vNormal);
- float n=noise(vPosition*3.5)*.5+noise(vPosition*11.)*.3+noise(vPosition*30.)*.2;
+ vec3 detail=texture2D(uMap,vMapUv).rgb;
+ float luma=dot(detail,vec3(.2126,.7152,.0722));
+ vec3 tinted=mix(detail,vec3(luma)*uColor*1.35,.48);
  float light=max(0.,dot(normal,normalize(vec3(-.7,.6,1.2))));
- float rim=pow(1.-max(0.,normal.z),3.5);
- float bands=sin(vPosition.y*30.+noise(vPosition*6.)*4.)*.5+.5;
- float terrain=mix(n,bands*.1+n*.9,step(.5,uKind)*(1.-step(1.5,uKind)));
- vec3 albedo=mix(uColor*.55,uColor*1.15,smoothstep(.28,.70,terrain));
- float cloud=smoothstep(.63,.82,noise(vPosition*7.+vec3(uTime*.008,0.,0.)));
- vec3 color=albedo*(.26+light*.85);
- color+=vec3(.64,.73,.81)*cloud*light*.20;
- color+=uColor*rim*.5;
+ float rim=pow(1.-max(0.,normal.z),4.);
+ vec3 color=tinted*(.30+light*.92)+uColor*rim*.17;
  gl_FragColor=vec4(color,uOpacity);
 }`;
 export const atmosphereFragment = `precision highp float;varying vec3 vNormal;varying vec3 vPosition;uniform vec3 uColor;uniform float uOpacity;
