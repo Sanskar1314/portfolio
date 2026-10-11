@@ -31,3 +31,15 @@ The traveling suit is now original volumetric geometry authored in `components/c
 
 ## Consistent 3D journey — revision 4
 The cinematic opening now uses the same volumetric suit as every subsequent scene. The photographic portrait is retained only for reader mode; the photo-to-model crossfade and DOM traveler have been removed. Solar-system skill planets reuse the generated surface texture, with category names and every technology rendered as accessible HTML on each world.
+
+## Blender explorer suit — 2026-10-09
+
+`public/models/explorer-suit.glb` is original geometry modeled through Higgsfield's hosted Blender 5.2 tools, project `b3e66f53-0cd0-40e6-a0f1-9a7dda2f82c4`, revision 3. Editable `.blend` and reproducible modeling scripts are in `scripts/blender/`. Design reference: the earlier astronaut illustration in this folder. Materials are ivory cloth, graphite armor, titanium, amber fittings and a smoked visor. This is an interpretation of the suit, without a facial likeness or character rig. It requires no attribution to the unused Poly astronaut asset.
+
+The final web GLB embeds the existing `astronaut.webp` portrait using UV coordinates over the visor. No new image is generated; no external portrait upload is involved. `scripts/blender/embed-portrait.py` reproduces this local embedding.
+
+## Supplied planetary references
+- jupiter-reference.png and mars-reference.png: images supplied directly by the user, copied unchanged for their respective Research and MovieMind worlds. No new license or attribution inferred.
+
+## Countdown Earth surface — 2026-10-11
+`earth-day.jpg`: Earth surface texture downloaded unchanged from the Three.js examples repository: https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg. Used only for the shallow countdown horizon, positioned to show land and ocean instead of the polar region.

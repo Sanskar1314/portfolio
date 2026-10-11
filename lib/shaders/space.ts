@@ -27,13 +27,7 @@ void main(){
  vec2 stars=p*230.; vec2 cell=floor(stars); vec2 point=fract(stars)-.5;
  float rnd=hash(cell); float star=pow(max(0.,1.-length(point)*2.),12.)*step(.988,rnd);
  col+=vec3(.6,.7,.85)*star*(1.-deep*.93);
- float opening=1.-smoothstep(.07,.17,uProgress);
- vec2 earth=p-vec2(.90,-1.34);float er=length(earth);
- float atmosphere=exp(-abs(er-1.20)*95.);
- float surface=1.-smoothstep(1.19,1.20,er);
- col+=vec3(.16,.40,.72)*atmosphere*opening;
- col=mix(col,vec3(.007,.022,.045)+vec3(.025,.07,.105)*fbm(earth*17.),surface*opening);
- col+=vec3(.9,.60,.28)*exp(-length(earth-vec2(-.4,1.12))*32.)*opening;
+
  float arrival=smoothstep(.845,.985,uProgress);
  if(arrival>.001){
    vec2 center=vec2(mix(.30,.20,arrival),.06);
@@ -45,19 +39,29 @@ void main(){
    // Lensed back disk appears above and below the event horizon.
    float band=abs(r-(.52+.025*sin(angle*2.)));
    float warp=exp(-band*55.)*(.3+.7*abs(sin(angle)));
-   float orbital=angle-uTime*.32;
+   float orbital=angle-mod(uTime,200.)*.32;
    float lanes=fbm(vec2(cos(orbital)*7.,sin(orbital)*7.)+r*65.);
-   vec2 disk=vec2(q.x,q.y*6.5+.12*sin(q.x*2.));
+   // Curve the foreground flow down toward the lower lensed image; bound time
+   // before evaluating noise to avoid precision breakdown during long sessions.
+   float clock=mod(uTime,200.);
+   float bend=.025*exp(-pow(q.x/.53,2.));
+   vec2 disk=vec2(q.x,(q.y+bend)*6.5);
    float dr=length(disk);
    float diskMask=smoothstep(.47,.57,dr)*(1.-smoothstep(1.2,2.2,dr));
    float da=atan(disk.y,disk.x);
-   float flow=da-uTime*(.48/pow(max(dr,.5),1.5));
-   float turbulence=fbm(vec2(cos(flow),sin(flow))*9.+dr*35.);
-   float filaments=.5+.5*sin(dr*180.+turbulence*7.+flow*3.);
-   float hotspot=pow(max(0.,cos(flow-.7)),12.);
-   float diskLight=diskMask*(.16+pow(turbulence,2.)*2.7+filaments*.17+hotspot*.28)/max(.7,dr*dr);
-   diskLight*=1.+.28*cos(da);
-   float front=step(q.y,0.);diskLight*=mix(smoothstep(horizon,horizon+.025,r),1.,front);
+   float flow=da-clock*.28;
+   float turbulence=fbm(vec2(dr*18.,sin(flow)*3.+cos(flow)*2.));
+   float frequency=75.;
+   float attenuation=1.-smoothstep(.3,1.2,fwidth(dr)*frequency);
+   float filaments=(.5+.5*sin(dr*frequency+turbulence*4.-clock*.6))*attenuation;
+   float diskLight=diskMask*(.12+turbulence*turbulence*1.7+filaments*.22)/max(.7,dr*dr);
+   diskLight*=1.+.25*cos(da);
+   float front=1.-smoothstep(-.025,.025,q.y+bend);
+   diskLight*=mix(smoothstep(horizon,horizon+.035,r),1.,front);
+   // Continuous lower arc uses the same radial flow as the upper lensed disk.
+   float lowerArc=exp(-abs(r-.515)*48.)*smoothstep(.05,.4,-q.y);
+   float arcFlow=.6+.4*sin(angle*12.-clock*.5+r*40.);
+   diskLight+=lowerArc*(.25+.25*arcFlow);
    float beams=exp(-abs(q.y+.012)*40.)*exp(-abs(q.x)*1.1)*smoothstep(.43,.53,abs(q.x));
    vec3 gold=vec3(1.,.42,.105);vec3 hot=vec3(1.,.88,.63);
    vec3 bh=gold*(halo+warp*(.7+lanes)+diskLight+beams*.6)+hot*ring*1.5;
@@ -79,6 +83,13 @@ uniform sampler2D uMap; uniform vec3 uColor; uniform float uOpacity; uniform flo
 void main(){
  vec3 normal=normalize(vNormal);
  vec3 detail=texture2D(uMap,vMapUv).rgb;
+ if(uKind==0. || uKind==2.){
+   vec2 projected=vec2(vPosition.x*.5+.5,vPosition.y*.5+.5);
+   vec2 photoUv=uKind==2. ? vec2(799./1600.,1.-535./1065.)+vPosition.xy*vec2(404./1600.,404./1065.) : projected*.99+.005;
+   detail=texture2D(uMap,photoUv).rgb;
+   gl_FragColor=vec4(detail*(.88+.12*max(0.,normal.z)),uOpacity);
+   return;
+ }
  float luma=dot(detail,vec3(.2126,.7152,.0722));
  vec3 tinted=mix(detail,vec3(luma)*uColor*1.35,.48);
  float light=max(0.,dot(normal,normalize(vec3(-.7,.6,1.2))));

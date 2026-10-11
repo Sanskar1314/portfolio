@@ -83,12 +83,9 @@ export const TRANSITION = 0.012;
 export function sceneBlend(index: number, progress: number) {
   const start = chapterStart(index);
   const end = start + chapters[index].duration / 100;
-  const enter =
-    index === 0 ? 1 : smooth(start - TRANSITION, start + TRANSITION, progress);
+  const enter = index === 0 ? 1 : smooth(start, start + TRANSITION, progress);
   const leave =
-    index === chapters.length - 1
-      ? 0
-      : smooth(end - TRANSITION, end + TRANSITION, progress);
+    index === chapters.length - 1 ? 0 : smooth(end - TRANSITION, end, progress);
   return {
     opacity: Math.pow(enter * (1 - leave), 1.6),
     offset: (1 - enter) * 34 - leave * 34,

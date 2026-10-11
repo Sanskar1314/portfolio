@@ -11,6 +11,7 @@ import {
 } from "@/lib/content";
 import { chapters } from "@/lib/timeline";
 import { ExperienceShell } from "@/components/cinematic/experience-shell";
+import { MissionDetails } from "@/components/cinematic/mission-details";
 import { SkillSystem } from "@/components/cinematic/skill-system";
 
 function Chapter({
@@ -91,14 +92,12 @@ export default function Home() {
           <h2>
             Every journey
             <br />
-            starts with
-            <br />
-            <em>curiosity.</em>
+            starts with <em>curiosity.</em>
           </h2>
         </div>
       </Chapter>
       <Chapter index={2}>
-        <div className="copy-block right">
+        <div className="copy-block right about-glass">
           <p className="eyebrow">THE PERSON INSIDE THE SUIT</p>
           <h2>
             A curious mind.
@@ -132,7 +131,7 @@ export default function Home() {
         <div className="skills-heading">
           <p className="eyebrow">CONNECTED BY CURIOSITY</p>
           <h2>
-            My technology
+            My technology{" "}
             <br />
             <em>universe.</em>
           </h2>
@@ -164,16 +163,7 @@ export default function Home() {
                 <span key={tech}>{tech}</span>
               ))}
             </div>
-            <details className="mission-details">
-              <summary>
-                Inside the mission <span>+</span>
-              </summary>
-              <ul>
-                {project.details.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
-              </ul>
-            </details>
+            <MissionDetails project={project} />
             <a className="pill-link" href={project.github} {...external}>
               View on GitHub <span>↗</span>
             </a>

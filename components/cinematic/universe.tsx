@@ -10,7 +10,6 @@ import {
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { Astronaut3D } from "./astronaut-3d";
 import { Worlds } from "./worlds";
 import { smooth, timeline } from "@/lib/timeline";
 import { screenVertex, spaceFragment } from "@/lib/shaders/space";
@@ -197,7 +196,6 @@ export default function Universe({
           <Suspense fallback={null}>
             <Worlds low={low} paused={paused} />
           </Suspense>
-          <Astronaut3D paused={paused} />
           <CameraRig low={low} onFailure={onFailure} />
         </Canvas>
       </Boundary>

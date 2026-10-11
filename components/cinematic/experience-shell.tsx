@@ -1,5 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
+import { LaunchIntro } from "./launch-intro";
+import { OrbitPointer } from "./orbit-pointer";
+import { RocketTraveler } from "./rocket-traveler";
 import { siteConfig } from "@/lib/content";
 import {
   type ReactNode,
@@ -93,6 +96,22 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
       );
     };
     window.addEventListener("hashchange", alignHash);
+    // Browser scroll restoration can run after hydration on a direct chapter URL.
+    const restoreChapter = () => {
+      measure();
+      const index = chapters.findIndex((c) => c.id === location.hash.slice(1));
+      if (index < 0) return;
+      window.scrollTo({
+        top:
+          (chapterStart(index) + (index === 0 ? 0 : TRANSITION * 1.05)) *
+          scrollMax,
+        behavior: "instant",
+      });
+    };
+    const previousRestoration = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+    window.addEventListener("load", restoreChapter);
+    window.addEventListener("pageshow", restoreChapter);
 
     const tick = (now: number) => {
       const dt = Math.min((now - previous) / 1000, 0.05);
@@ -137,6 +156,9 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", measure);
       window.removeEventListener("hashchange", alignHash);
+      window.removeEventListener("load", restoreChapter);
+      window.removeEventListener("pageshow", restoreChapter);
+      history.scrollRestoration = previousRestoration;
       elements.forEach((el) => {
         const content = el.firstElementChild as HTMLElement;
         content.style.visibility = "";
@@ -241,7 +263,10 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
           }}
         />
       )}
+      <LaunchIntro />
       <main id="main-content">{children}</main>
+      {mode === "cinematic" && <RocketTraveler />}
+      {mode === "cinematic" && <OrbitPointer paused={paused} />}
       <aside className="flight-controls" aria-label="Display settings">
         <button onClick={toggleMode}>
           {reader ? "Enter space ↗" : "Read portfolio ↗"}

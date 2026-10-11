@@ -22,7 +22,15 @@ function Planet({
   low: boolean;
   skill?: boolean;
 }) {
-  const texture = useLoader(THREE.TextureLoader, "/images/planet-ocean.webp");
+  const texture = useLoader(
+    THREE.TextureLoader,
+    index === 4
+      ? "/images/mars-reference.png"
+      : index === 6
+        ? "/images/jupiter-reference.png"
+        : "/images/planet-ocean.webp",
+  );
+  const turn = useRef(0);
   const group = useRef<THREE.Group>(null),
     surface = useRef<THREE.Mesh>(null),
     material = useRef<THREE.ShaderMaterial>(null),
@@ -60,7 +68,13 @@ function Planet({
     group.current.visible = blend.opacity > 0.001;
     if (!group.current.visible) return;
     if (!paused) {
-      surface.current.rotation.y += dt * 0.035;
+      turn.current += dt;
+      // Supplied photographs show one hemisphere: a gentle axial turn preserves
+      // their details without inventing a stretched, repeating backside.
+      surface.current.rotation.y =
+        index === 5
+          ? turn.current * 0.035
+          : Math.sin(turn.current * 0.12) * 0.2;
       material.current.uniforms.uTime.value += dt;
     }
     const side = index === 5 ? -1 : 1;
@@ -138,7 +152,7 @@ export function Worlds({ paused, low }: { paused: boolean; low: boolean }) {
     <>
       <Planet index={4} color="#cb9972" paused={paused} low={low} />
       <Planet index={5} color="#79afd9" paused={paused} low={low} />
-      <Planet index={6} color="#80b5a8" paused={paused} low={low} />
+      <Planet index={6} color="#d9b98d" paused={paused} low={low} />
     </>
   );
 }

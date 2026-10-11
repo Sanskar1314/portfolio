@@ -9,7 +9,7 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - Server-rendered content defaults to reader mode (works without JavaScript). After hydration, reduced-motion users stay in reader mode; others enter the cinematic mode.
 - Native sections are scroll tracks. Twelve fixed scene panels share one normalized, damped timeline with WebGL. No scroll interception or speed-dependent animation. Native hash links work forward/backward.
 - Desktop 900 star streaks; mobile 280, reduced sphere tessellation, fewer procedural noise samples, DPR 1. Measured frame time can reduce DPR further.
-- One volumetric 3D suit from the first frame to the finale, with no photo/model handoff; fixed screen lane and forward depth travel; continuous reversible chapter crossfades. Generated high-detail surface map on rotating planets; procedural nebula, stars, hyperspace and flowing analytical accretion disk.
+- Original photographic astronaut hero restored by user request. No active 3D suit. Scroll-driven rocket travels left to right along the lower edge. Sequential text fades prevent ghosted headlines. Supplied Mars/Jupiter references and generated ocean planet remain in the universe.
 - No audio, external runtime generation service, API key or environment variable required.
 
 ## Repository Map
@@ -22,7 +22,7 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - components/cinematic/universe.tsx: Canvas, adaptive DPR, stars, worlds, context-loss handling
 - components/cinematic/astronaut-3d.tsx: original mesh suit and forward-only depth travel
 - components/cinematic/worlds.tsx: independently blended, lit procedural skill/project planets
-- components/cinematic/skill-system.tsx: five always-labeled technology planets (29 tools), no click-to-reveal
+- components/cinematic/skill-system.tsx: five always-labeled constellation groups (29 tools), no click-to-reveal
 - lib/shaders/space.ts: original procedural GLSL
 - public/images/ASSETS.md: complete generation prompt/provenance
 - public/models/astronaut.glb and public/credits.html: optimized model and required attribution
@@ -42,13 +42,12 @@ Reviewed ../Branding/Astronaut Portfolio Across the Universe.png, ../Branding/co
 - Successful production build, static prerender, TypeScript, lint, browser suite and production smoke test.
 
 ## In Progress
-Complete. Production preview refreshed following user visual feedback. Latest feedback implemented: removed the mismatched photographic/model handoff; one consistent 3D suit across every cinematic scene. Skills are five labeled planets with all 29 technologies visible directly, plus responsive scrolling on phones. Earlier sharp planet textures and flowing black-hole light are preserved.
+Latest visual feedback implemented locally (2026-10-09): centered launch, full-width two-column About glass panel, dark glass mission cards, warm contact glass, brighter/larger copy and technology chips, larger stylized orbit labels. Desktop pointer has a subtle orbital ring that expands over links, preserves the native cursor, and disables for coarse pointers, reduced motion and Pause motion.
 
 ## Remaining
-- User visual review, particularly likeness and the revised continuous transitions.
-- Physical iOS/Safari/Android GPU testing is not performed; mobile Chrome viewport emulation is verified.
-- Vercel deployment is not performed. Use the portfolio directory as root, Next.js preset; no env required.
-- Optional visual refinement: scanned/facially rigged astronaut likeness, more elaborate physically based lensing, richer per-project world geometry. Current versions are functional approximations.
+- User visual review of the new glass composition.
+- Physical iOS/Safari/Android testing and Vercel deployment have not been performed.
+- Small screens vertically scroll the single-column constellation; all 29 tools remain accessible.
 
 ## Generated Assets
 - public/images/planet-ocean-original.png and planet-ocean.webp: built-in imagegen equirectangular texture; exact prompt in ASSETS.md; WebP about 652 KB.
@@ -57,40 +56,72 @@ Complete. Production preview refreshed following user visual feedback. Latest fe
 - public/images/astronaut-rear-original.png and astronaut-rear.webp: built-in imagegen matching rear suit, optimized locally; exact prompt in ASSETS.md.
 - public/models/astronaut.glb: retained historical prototype, no longer loaded. NOT generated. Astronaut by Poly, CC BY 2.0, via Google model-viewer. Texture resized/recompressed; 2,869,044 → 265,160 bytes. Public credits linked in footer.
 - docs/previews/desktop.png and black-hole.png: production browser screenshots, not generated scene art.
-- Higgsfield was considered; no credits spent. Built-in imagegen supported the supplied local identity reference directly.
+- Higgsfield hosted Blender 5.2 created the suit, project b3e66f53-0cd0-40e6-a0f1-9a7dda2f82c4, revision 3. The portable GLB then received the existing portrait locally via scripts/blender/embed-portrait.py. No new face was generated or uploaded.
+- public/models/explorer-suit.glb: final portable model with embedded portrait, 3,152,088 bytes. scripts/blender/explorer-suit.blend: editable geometry and studio lighting before local portrait embedding.
 
 ## Important Decisions
 - Initial local content called the teaching project TeachRAG. Current upstream README at https://github.com/Sanskar1314/RAG_Based_Teaching_Assistant verifies SigmaLearn AI, Next.js/React/Gemini/Whisper and https://sigmalearn-ai.vercel.app (HTTP 200 checked). Preserve this correction. Chapter anchor is #sigmalearn.
 - Existing local content is the source for education, internship, awards and dates. Do not import extra metrics from the concept board. No publication URL was available; none fabricated. Research accuracy metric omitted from display.
 - Identity-preserved front image and matching rear generation; do not replace the interactive universe with a video.
-- No remote Google Fonts dependency. No fake loading percentage or artificial wait.
+- No remote Google Fonts dependency. No fake loading percentage. User explicitly requested a 3-2-1 launch intro; five-second sequence has Skip/Escape and reduced-motion bypass.
 - Never put side-effectful fallback components inside Canvas fallback: its fallback DOM children may mount even when WebGL works.
 
 ## Known Problems / Compromises
-- The volumetric suit is an original stylized mesh model, not a scan or facially rigged likeness. The cinematic opening uses the same 3D model; the generated portrait is retained for reader mode only. Previous rear plate and GLB are retained unused.
-- Lensing is a physically inspired analytical approximation, not ray-traced general relativity. Skills use five solar-system planets with always-visible category names and tools, with no selection interaction.
+- Blender experiments and models are retained but unused. Do not reactivate: user chose the original portrait plus rocket. Supplied planet photos show one hemisphere; gentle axial oscillation preserves their appearance rather than fabricating a backside.
+- Lensing is a physically inspired analytical approximation, not ray-traced general relativity. Skills use five constellation groups with always-visible category names and tools, with no selection interaction.
 - No verified Brain Tumor Detection publication URL or MovieMind live demo was found. Existing résumé/certification Drive and LinkedIn URLs retained; their authenticated/private content was not independently verified.
 - Five development-only npm audit advisories remain in eslint-config-next → fast-glob → braces, with no compatible upstream fix offered. Do not force-downgrade Next lint tooling. Production audit reports zero.
 - Machine Homebrew Node fails loading libsimdjson. Use a working Node or /Users/sanskar/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node (put its directory first on PATH). This is not required on Vercel.
 
 ## Testing Status
-Verified 2026-10-09 (Asia/Kolkata):
-- dev: verified on http://127.0.0.1:3000; production preview uses port 3001.
-- lint: pass; TypeScript: pass.
-- production build: pass, Next.js 16.4.0, static / and /_not-found.
-- browser suite: 16/16 pass using PLAYWRIGHT_CHANNEL=chrome npm test.
-- responsive: 1440×900/1000, review viewports 1126×771 and 662×771, 390×844 and 360×640; no horizontal overflow, disclosures remain reachable.
-- behaviors: fixed-lane forward 3D travel, all five labeled skill planets and all 29 technology names, light-flow/pause screenshot comparison (moving pixel difference 6.85; paused 0), forward/backward navigation, project details, reader toggle, pause, reduced motion, context loss and JavaScript disabled verified.
-- production server: http://127.0.0.1:3001. Direct #skills/#sigmalearn/#nebula/#contact verified; no console errors. Frame sampling is local headless Chrome only, not a physical-device benchmark.
-- production dependencies: npm audit --omit=dev reports zero vulnerabilities.
-- Git diff whitespace check: pass. Original branding/photo assets preserved.
+Latest checks 2026-10-09:
+- Production build and TypeScript pass: npm run build -- --webpack.
+- Lint and git diff --check pass.
+- CUA visual review of desktop About, MovieMind, skills, contact and 390x844 contact. No observed browser console errors.
+- Previous 16/16 browser suite passed at c21fc6e; not rerun for this revision. Do not report it as current verification.
+- Production preview is running at http://127.0.0.1:3001 (session 95102).
 
 ## Resume Point
-Read AGENTS.md and this file. Implementation is built and verified; do not restart or redesign it. Open the local preview (start npm run dev if needed) and continue from concrete user feedback. For a requested character upgrade, begin in components/cinematic/astronaut-3d.tsx and preserve the tested timeline and fallback behavior. For deployment, use README.md and verify the production build before publishing.
+Read AGENTS.md and this file. Continue user visual feedback without restarting architecture. Active hero uses astronaut.webp; RocketTraveler replaces the model. Latest glass/layout overrides are at the end of app/globals.css; OrbitPointer is mounted by ExperienceShell. Skills now follow the supplied ideation: five glass cards with colored planet badges and orbital paths around a gold world, all 29 tools retained. Mars and Jupiter are the user's supplied images in public/images. Retained Blender files are historical only.
 
-## Next 5 Actions
-1. Review the local production preview and existing screenshots with the user.
-2. Apply specific requested visual/likeness refinements without rebuilding the architecture.
-3. If physical devices are available, check Safari/iOS and Android scrolling, GPU load and text sizing.
-4. Deploy to Vercel when requested, using the portfolio directory as root.
-5. After changes, run lint/typecheck/browser tests/build and update this file.
+## Next Actions
+1. Refine from user review while preserving original portrait, supplied planets and factual content.
+2. Verify future changes in browser and rebuild; deploy only when requested.
+
+## Latest review refinements
+Neutral smoked glass replaces navy mission/About panels; cream metadata and chips. Chapter captions align with the 9% content edge (7% on small screens). Contact shifts 3vw left on desktop and its message uses Georgia serif. Skills replaced with a connected constellation; all 29 tools fit the desktop panel without scrolling. Production webpack build, TypeScript, lint and whitespace checks pass; desktop constellation/contact/research reviewed.
+
+## 2026-10-10 update
+- Added half-visible stylized Earth (existing ocean texture) at bottom center of countdown and hero, replacing the diagonal shader horizon. Sized below the main copy.
+- Unified interface accent tokens to muted gold, cream copy, and neutral charcoal glass; planets keep natural color.
+- LaunchIntro provides countdown/vertical rocket, Skip and Escape, reduced-motion bypass, scroll/focus restoration and timer cleanup.
+- Skills reference is pending: only a screenshot of the current manifest was supplied so far.
+- Webpack production build + TypeScript and lint passed; desktop opening visually reviewed.
+
+## Latest correction
+Earth is ONLY in LaunchIntro, removed from the portrait hero. Rocket nozzle aligns to the top of the globe via the shared --launch-earth size; launch is vertical. Skills reference received and implemented with real HTML cards/chips, textured planet badges and CSS orbits; responsive layout stacks cards. Production webpack build, TypeScript and lint pass. Countdown origin visually checked; hero Earth absent in DOM.
+
+Latest sizing adjustment: countdown Earth now shows only a shallow top cap (16vh, bounded 75–150px), not a hemisphere. Rocket launch origin uses the same visible-height variable on desktop and phone.
+
+## Current interaction (2026-10-10)
+User supersedes always-visible skills: hover/focus/tap a named planet to reveal its category in a shared glass panel. Details close immediately on pointer leave or keyboard blur; another planet changes them; Escape closes them. No panel or placeholder is shown with no selection. Reader mode retains all skill lists. Earth remains only in countdown, now 160vw minimum diameter (200vw mobile) with the same shallow cap height and rocket origin. Build/TypeScript/lint pass; browser verified reveal, Tab selection, Escape dismissal and wider Earth.
+
+2026-10-11: Changed planet details to dismiss on pointer leave, with blur cleanup and a hidden empty panel. Touch selection remains available.
+
+2026-10-11 visual adjustment: Data Science planet lowered 14px on desktop; hover panel still clears its label. Countdown Earth now uses earth-day.jpg from Three.js examples, with temperate land/ocean positioned within the existing shallow, wide cap. No Earth added to the portrait hero. Production webpack build and TypeScript passed; browser checked countdown surface/rocket origin and Data Science panel spacing. Preview port 3001 session 36848.
+
+2026-10-11 follow-up: Data Science moved another 32px lower on desktop (46px total offset from 40%). Its revealed panel uses tighter vertical padding to clear the label. Browser verified selected state; webpack production build and TypeScript passed. Preview session 87585 on port 3001.
+
+2026-10-11 scrollbar refinement: hidden scrollbar tracks globally, including all overflowing cards, while retaining existing overflow and scroll behavior. Verified expanded MovieMind card scrolls to its GitHub link without a visible scrollbar. Production webpack build, TypeScript and diff whitespace check passed. Preview port 3001 session 54661.
+
+2026-10-11 Chrome layout investigation: native Chrome opening screenshot appeared intact; subsequent native capture failed. Reproduced short desktop viewport skills detail overlap at 1366x600 in IAB. Removed cinematic scene 650px minimum height, use 100dvh; <=700px-high desktop gets tighter hero typography and skills details below the left heading, avoiding planet hover occlusion. Verified short-window Data Science details; reset viewport override. Build/TypeScript and diff check passed. Preview session 4397. Asked user which Chrome section shifts; exact reported Chrome issue still requires their clarification if it persists.
+
+2026-10-11 contact overlap fix: contact chapter now reserves explicit space for caption (36px above card), card (bounded above footer with internal scrolling), and copyright footer (95px from bottom). Removes inherited mobile top margins; compact typography on short screens. Verified no overlap at 1366x600. Build/TypeScript passed; preview session 58252. This addresses the user's clarified Chrome issue at the black-hole finale.
+
+2026-10-11 contact typography: reduced “What’s next?” to a viewport-height-aware 32–56px heading (6dvh), line-height 1.08. Email visible without card scrolling in desktop preview. Build/TypeScript and diff check passed; preview session 6386.
+
+2026-10-12 project interaction: replaced inline expanding project details with shared MissionDetails client component. Native modal dialog opens with a restrained fade/scale and blurred backdrop, numbered factual highlights, technology chips, persistent GitHub/live actions, close button and Escape dismissal. Keeps the original native details as no-JS fallback. Locks background scroll and explicitly restores scroll position/focus after native dialog autofocus; prevents return-to-hero jumps. Both projects verified in browser: MovieMind mouse/keyboard open, Escape and Close, same-section restoration; SigmaLearn mobile 390x844 view with both actions visible. Viewport reset. Production webpack build, TypeScript, lint and diff check pass. Preview port 3001 session 5014.
+
+2026-10-12 launch animation: added 24 deterministic star trails and ignition glow; lifting phase now drops Earth downward, fades launch labels, and accelerates the entire intro screen upward over the existing 2.1-second handoff. Brief 2px ignition movement; reduced-motion bypass retained, Skip/Escape unchanged. Browser verified countdown/lifting DOM and completion to hero; production webpack build, TypeScript, lint and diff check passed. Preview session 9855.
+
+2026-10-12 home entrance: after LaunchIntro unmounts (natural completion or skip), astronaut drifts in over 1.5s and hero eyebrow/name/role/intro/CTA enter with staggered opacity/translate animations. Scroll cue and home note arrive last. Scoped to cinematic mode and no-preference motion; reader/reduced-motion remain static. Build/TypeScript and diff check pass; browser verified completed hero reveal. Preview session 31276.
