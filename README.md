@@ -1,42 +1,119 @@
-# Sanskar Gupta · Across the universe
+# Sanskar Gupta · Across the Universe
 
-Cinematic portfolio built with Next.js 16, TypeScript, React Three Fiber and procedural GLSL. npm is the package manager. Requires Node.js 20.9+ (Node 22 LTS recommended).
+A personal portfolio presented as a journey through space — from a rocket launch above Earth to a black-hole finale. Built to showcase my work in data science, machine learning, and AI through an interactive, scroll-driven experience.
+
+**[Explore the live portfolio](https://sanskar-portfolio-gamma.vercel.app)** · [GitHub](https://github.com/Sanskar1314) · [LinkedIn](https://www.linkedin.com/in/sanskar-gupta-0a7b3529a/)
+
+## The experience
+
+- **Launch sequence:** a 3–2–1 countdown, rocket liftoff from Earth's horizon, and an upward screen transition into the home page. Skip the intro with the button or Escape.
+- **Astronaut home page:** a photographic astronaut portrait and staggered text entrance introduce the journey.
+- **Scroll-driven chapters:** twelve scenes share one timeline, with slower pacing for reading and a rocket traveling along the lower edge.
+- **Interactive skills universe:** hover over, keyboard-focus, or tap a labeled planet to reveal its technologies. Clear hover/tap hints and gold + indicators make the interaction discoverable; pointer departure hides the panel.
+- **Project missions:** MovieMind and SigmaLearn AI feature glass cards and animated detail dialogs with project links. Escape or the close button dismisses a dialog and returns focus to its trigger.
+- **Black-hole finale:** a gold accretion disk frames the contact card, social links, and email.
+
+Cream typography, muted gold accents, smoked glass, and natural planet colors connect the sections visually.
+
+## Featured work
+
+| Project | Focus | Repository |
+| --- | --- | --- |
+| MovieMind | Content-based movie recommendations using TF-IDF, cosine similarity, FastAPI, and Streamlit | [View source](https://github.com/Sanskar1314/Movie_Recommendation_End_to_End) |
+| SigmaLearn AI | A RAG teaching assistant with course-video transcription, retrieval, and timestamped answers | [View source](https://github.com/Sanskar1314/RAG_Based_Teaching_Assistant) |
+| Brain Tumor Detection | MRI image classification research using the Xception architecture | Described in the portfolio |
+
+The portfolio also includes education, experience, achievements, and certifications. Portfolio content and links are maintained in [`lib/content.ts`](lib/content.ts).
+
+## Built with
+
+- **Next.js 16 and React 19** — App Router and server-rendered content
+- **TypeScript** — application code and shared timeline
+- **React Three Fiber and Three.js** — real-time space scenes
+- **GLSL** — stars, nebulae, and black-hole effects
+- **CSS and SVG** — responsive layouts, glass surfaces, orbital controls, and rocket animation
+- **Playwright and ESLint** — browser checks and code quality
+
+## Run locally
+
+Use Node.js **20.9 or newer** and npm.
 
 ```sh
+git clone https://github.com/Sanskar1314/portfolio.git
+cd portfolio
 npm ci
 npm run dev
-npm run lint
-npm run typecheck
-npm run build
+```
+
+Open [localhost:3000](http://localhost:3000). No environment variables, API keys, or runtime image-generation services are required.
+
+For a production preview:
+
+```sh
+npm run build -- --webpack
 npm start
 ```
 
-Deploy to Vercel with this `portfolio` directory as the project root and the Next.js preset. No environment variables or generation services are required at runtime. The site has not been deployed by the coding agent.
+The webpack command above is the build path used for recent verification.
 
-## Browser tests
+## Accessibility and performance
+
+- **Read portfolio** switches to a conventional reading layout. Reduced-motion preferences select this mode automatically and bypass the animated intro.
+- Server-rendered portfolio content remains available without JavaScript. WebGL failure or context loss falls back to reading mode.
+- Planet controls support keyboard focus; project dialogs restore focus when closed.
+- **Pause motion** stops idle animation while keeping scroll navigation available.
+- Scrolling uses the browser's native behavior. Hidden scrollbar tracks do not disable scrolling.
+- Mobile scenes reduce star count, geometry detail, shader work, and pixel ratio. Rendering can reduce pixel ratio further when frame times rise.
+
+## Project structure
+
+| Path | Purpose |
+| --- | --- |
+| `app/page.tsx` | Semantic portfolio sections and project content |
+| `app/globals.css` | Design tokens, responsive layouts, and animation styles |
+| `lib/content.ts` | Portfolio facts, skills, projects, and contact links |
+| `lib/timeline.ts` | Chapter timing, shared progress, and scene blending |
+| `components/cinematic/experience-shell.tsx` | Navigation, display modes, and scroll coordination |
+| `components/cinematic/launch-intro.tsx` | Countdown, liftoff, and intro handoff |
+| `components/cinematic/skill-system.tsx` | Interactive planet controls and skill details |
+| `components/cinematic/mission-details.tsx` | Project detail dialogs |
+| `components/cinematic/universe.tsx` | WebGL scene and adaptive rendering |
+| `lib/shaders/space.ts` | Procedural space shaders |
+| `public/` | Local images, textures, models, and asset credits |
+| `tests/` | Playwright browser regression suite |
+
+Historical model experiments are retained in the repository; the current hero uses the photographic astronaut asset.
+
+## Validation
+
+```sh
+npm run lint
+npm run typecheck
+npm run build -- --webpack
+```
+
+Browser regression suite:
 
 ```sh
 npx playwright install chromium
 npm test
-# Or use an existing local Chrome installation:
+
+# Alternatively, use an installed Google Chrome:
 PLAYWRIGHT_CHANNEL=chrome npm test
 ```
 
-The tests start or reuse a local development server. They cover loading, local assets, navigation, backward scrolling, keyboard skill selection, project details, reading mode, pause controls, mobile layouts, reduced motion, WebGL context loss, no-JavaScript access, continuous chapter blending and the 662×771 feedback viewport.
+Playwright starts or reuses a development server on port 3000. Some regression tests predate the latest intro and project-dialog changes; the full suite has not been revalidated against those interactions. Recent targeted Chrome checks and build results are recorded in [`PROJECT_STATE.md`](PROJECT_STATE.md).
 
-## Architecture
+## Deployment
 
-- `lib/content.ts`: portfolio facts, projects, skills and contact URLs.
-- `lib/timeline.ts`: central chapter durations and shared animation state.
-- `components/cinematic/`: pinned scene content, navigation, WebGL world and astronaut.
-- `lib/shaders/space.ts`: procedural planets, nebula, star background and analytical black-hole effect.
-- `app/page.tsx`: server-rendered semantic content; accessible without WebGL or JavaScript.
-- `PROJECT_STATE.md`: latest QA and precise handoff.
+The live portfolio is hosted on Vercel. To deploy your own copy, import the repository, select the **Next.js** preset, and use the repository root (the directory containing `package.json`) as the project root. Set the build command to `npm run build -- --webpack`. No environment variables are needed.
 
-“Read portfolio” removes the cinematic layer. Reduced-motion preferences select it automatically. “Pause motion” stops idle animation while preserving scroll navigation. Mobile uses fewer stars, lower geometry resolution, fewer noise samples and lower DPR. DPR also drops if measured frame time is high. Context loss selects readable content.
+If you fork this project, update the profile, project links, and `siteConfig.url` in `lib/content.ts` for your deployment, and replace personal imagery with your own assets.
 
-One original volumetric 3D suit renders from the first cinematic frame through the finale, with no photographic crossfade or model replacement. The generated portrait is retained only in reader mode. The suit has a smooth helmet, torso, backpack, articulated limbs, gloves, boots and hoses; it turns in 3D and travels into depth along a fixed screen lane. It is a stylized code-built model, not a scanned or facially rigged likeness. Planets use a sharp generated equirectangular surface texture on live rotating spheres. Skills form a solar system of five textured planets, each displaying its category and every technology directly on the surface. All 29 technologies are visible without clicking; narrower screens provide a scrollable planet trail. The black-hole disk has differential orbital flow, traveling highlights and lensed arcs; pause stops this motion. Lensing remains an artistic approximation. See `/credits.html` and `public/images/ASSETS.md` for provenance.
+## Assets and credits
 
-The current upstream project README confirms **SigmaLearn AI** (called TeachRAG in the original local source). Its public live demo is included. Original photos and branding remain unchanged. No research publication URL has been invented.
+See [`public/credits.html`](public/credits.html) and [`public/images/ASSETS.md`](public/images/ASSETS.md) for asset provenance and attribution, including generated imagery and retained third-party models. Asset-specific licenses still apply. The black-hole lensing is an artistic approximation, not a physical simulation.
 
-Local environment note: this machine’s Homebrew Node currently cannot load `libsimdjson.29.dylib`. Verification used the bundled Node 24 runtime; this is a machine issue, not a project runtime dependency. Use a working Node installation for the commands above.
+## Contact
+
+[Email](mailto:sanskargupta1314@gmail.com) · [LinkedIn](https://www.linkedin.com/in/sanskar-gupta-0a7b3529a/) · [GitHub](https://github.com/Sanskar1314)
