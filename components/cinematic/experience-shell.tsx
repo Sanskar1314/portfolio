@@ -34,7 +34,6 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
   const [active, setActive] = useState(0);
   const [failure, setFailure] = useState(false);
   const [paused, setPaused] = useState(false);
-  const progressRef = useRef<HTMLDivElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const destinationRef = useRef<string | null>(null);
@@ -151,8 +150,6 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
         activeRef.current = chapter;
         setActive(chapter);
       }
-      if (progressRef.current)
-        progressRef.current.style.transform = `scaleX(${timeline.progress})`;
       elements.forEach((el, i) => {
         const start = chapterStart(i);
         const localPosition =
@@ -314,9 +311,6 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
           </span>
         </div>
       )}
-      <div className="journey-progress" aria-hidden="true">
-        <div ref={progressRef} />
-      </div>
     </div>
   );
 }

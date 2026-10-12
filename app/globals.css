@@ -758,21 +758,6 @@ h2 {
   background: var(--gold);
   box-shadow: 0 0 8px #e5ba80;
 }
-.journey-progress {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  z-index: 20;
-  background: #ffffff0a;
-}
-.journey-progress > div {
-  height: 100%;
-  background: linear-gradient(90deg, #6189af, #d5b187);
-  transform-origin: left;
-  transform: scaleX(0);
-}
 .skip-link {
   position: fixed;
   top: -60px;
