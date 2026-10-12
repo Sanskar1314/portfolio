@@ -16,9 +16,9 @@ export function SkillSystem() {
             onPointerLeave={event => { if (event.pointerType !== "touch") setSelected(current => current === index ? null : current); }}
             onBlur={() => setSelected(current => current === index ? null : current)}
             onFocus={() => setSelected(index)} onClick={() => setSelected(index)}
-            aria-expanded={selected === index} aria-controls="planet-information">
+            aria-expanded={selected === index} aria-controls="planet-information" aria-describedby="skills-explore-hint">
             <span className="atlas-badge" aria-hidden="true"><span>{marks[index]}</span></span>
-            <span className="planet-name">{group.label}</span>
+            <span className="planet-name">{group.label}<span className="planet-reveal-mark" aria-hidden="true">+</span></span>
           </button>
         ))}
         <div className="planet-information" id="planet-information" aria-live="polite" hidden={selected === null}>

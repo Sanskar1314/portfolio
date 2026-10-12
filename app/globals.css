@@ -2958,6 +2958,22 @@ summary:hover {
 .planet-selector:hover .atlas-badge, .planet-selector[aria-expanded="true"] .atlas-badge { transform: scale(1.1); box-shadow: 0 0 28px #dbc59350; }
 .planet-selector[aria-expanded="true"] .planet-name { color: #edd3a2; }
 .planet-name { font-size: 14px; color: #e2dfd7; line-height: 1.3; }
+.skills-explore-hint { display: none; }
+.cinematic-mode .skills-explore-hint { display: flex; align-items: flex-start; gap: 10px; margin: 20px 0 0; max-width: 250px; font-size: 13px; line-height: 1.6; color: #c8bda8; }
+.skills-explore-hint > span:first-child { color: var(--accent); font-size: 20px; line-height: 1; }
+.skills-touch-hint { display: none; }
+.planet-reveal-mark { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 6px; border: 1px solid #ccb99066; border-radius: 50%; color: #dcc99f; font: 12px/1 var(--font-mono); transition: transform .2s, background .2s; }
+.planet-selector:is(:hover, :focus-visible) .planet-reveal-mark { transform: rotate(45deg); background: #ccb99022; }
+@media (hover: none), (pointer: coarse) {
+ .skills-hover-hint { display: none; }
+ .skills-touch-hint { display: inline; }
+}
+@media (max-width: 900px) {
+ .cinematic-mode .skills-explore-hint { margin-top: 10px; max-width: none; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .planet-reveal-mark { transition: none; }
+}
 .planet-selector-0 { left: 20%; top: 2%; }
 .planet-selector-1 { left: 77%; top: 4%; --planet-tint: 65deg; }
 .planet-selector-2 { left: 10%; top: 36%; --planet-tint: 125deg; }

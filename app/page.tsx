@@ -135,6 +135,11 @@ export default function Home() {
             <br />
             <em>universe.</em>
           </h2>
+          <p className="skills-explore-hint" id="skills-explore-hint">
+            <span aria-hidden="true">↗</span>
+            <span className="skills-hover-hint">Hover over a planet to reveal my skills.</span>
+            <span className="skills-touch-hint">Tap a planet to reveal my skills.</span>
+          </p>
         </div>
         <SkillSystem />
         <div className="reader-skills">
