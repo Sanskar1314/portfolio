@@ -7,6 +7,7 @@ import { siteConfig } from "@/lib/content";
 import {
   type ReactNode,
   type MouseEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -37,6 +38,17 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
   const shellRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(0);
   const destinationRef = useRef<string | null>(null);
+  const introPending = useRef(true);
+  const finishIntro = useCallback(() => {
+    // The launch always departs into the home scene, never a restored chapter.
+    history.replaceState(history.state, "", `${location.pathname}${location.search}#top`);
+    destinationRef.current = null;
+    timeline.target = timeline.progress = timeline.chapter = timeline.local = 0;
+    activeRef.current = 0;
+    setActive(0);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    introPending.current = false;
+  }, []);
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const choose = () => {
@@ -52,6 +64,7 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
       const destination = destinationRef.current || location.hash.slice(1);
       destinationRef.current = null;
       requestAnimationFrame(() => {
+        if (introPending.current) return;
         const el = document.getElementById(destination);
         if (el)
           window.scrollTo({
@@ -84,6 +97,7 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
     measure();
     window.addEventListener("resize", measure);
     const alignHash = () => {
+      if (introPending.current) return;
       const index = chapters.findIndex((c) => c.id === location.hash.slice(1));
       if (index < 0) return;
       requestAnimationFrame(() =>
@@ -99,6 +113,10 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
     // Browser scroll restoration can run after hydration on a direct chapter URL.
     const restoreChapter = () => {
       measure();
+      if (introPending.current) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+        return;
+      }
       const index = chapters.findIndex((c) => c.id === location.hash.slice(1));
       if (index < 0) return;
       window.scrollTo({
@@ -116,7 +134,11 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
     const tick = (now: number) => {
       const dt = Math.min((now - previous) / 1000, 0.05);
       previous = now;
-      timeline.target = clamp(scrollY / scrollMax);
+      if (introPending.current) {
+        if (scrollY !== 0) window.scrollTo({ top: 0, behavior: "instant" });
+        timeline.progress = 0;
+      }
+      timeline.target = introPending.current ? 0 : clamp(scrollY / scrollMax);
       timeline.progress =
         Math.abs(timeline.target - timeline.progress) < 0.00001
           ? timeline.target
@@ -263,7 +285,7 @@ export function ExperienceShell({ children }: { children: ReactNode }) {
           }}
         />
       )}
-      <LaunchIntro />
+      <LaunchIntro onComplete={finishIntro} />
       <main id="main-content">{children}</main>
       {mode === "cinematic" && <RocketTraveler />}
       {mode === "cinematic" && <OrbitPointer paused={paused} />}

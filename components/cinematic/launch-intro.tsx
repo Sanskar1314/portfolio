@@ -1,28 +1,32 @@
 "use client";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
-export function LaunchIntro() {
+export function LaunchIntro({ onComplete }: { onComplete: () => void }) {
   const [stage, setStage] = useState(3);
   const overlay = useRef<HTMLDivElement>(null);
   const skip = useRef<HTMLButtonElement>(null);
   const active = stage >= 0;
+  const finish = useCallback(() => {
+    onComplete();
+    setStage(-1);
+  }, [onComplete]);
   useEffect(() => {
     if (!active) return;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) {
-      const timer = setTimeout(() => setStage(-1), 0);
+      const timer = setTimeout(finish, 0);
       return () => clearTimeout(timer);
     }
     const timers = [
       setTimeout(() => setStage(2), 1000),
       setTimeout(() => setStage(1), 2000),
       setTimeout(() => setStage(0), 3000),
-      setTimeout(() => setStage(-1), 5100),
+      setTimeout(finish, 5100),
     ];
-    const stop = () => { if (reduced.matches) setStage(-1); };
+    const stop = () => { if (reduced.matches) finish(); };
     reduced.addEventListener("change", stop);
     return () => { timers.forEach(clearTimeout); reduced.removeEventListener("change", stop); };
-  }, [active]);
+  }, [active, finish]);
   useEffect(() => {
     if (!active || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const root = overlay.current;
@@ -34,7 +38,7 @@ export function LaunchIntro() {
     const oldOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
     skip.current?.focus({ preventScroll: true });
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setStage(-1); };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") finish(); };
     window.addEventListener("keydown", escape);
     return () => {
       siblings.forEach((el, i) => { el.inert = oldInert[i]; });
@@ -42,7 +46,7 @@ export function LaunchIntro() {
       window.removeEventListener("keydown", escape);
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [active]);
+  }, [active, finish]);
   if (!active) return null;
   return (
     <div ref={overlay} className={`launch-intro ${stage === 0 ? "is-lifting" : ""}`} role="dialog" aria-modal="true" aria-label="Launch countdown">
@@ -56,7 +60,7 @@ export function LaunchIntro() {
       </div>
       <div className="intro-ignition-glow" aria-hidden="true" />
       <div className="intro-brand">SG <span> / PERSONAL EXPLORATION</span></div>
-      <button ref={skip} className="intro-skip" onClick={() => setStage(-1)}>Skip intro ↗</button>
+      <button ref={skip} className="intro-skip" onClick={finish}>Skip intro ↗</button>
       <div className="intro-count">
         <p>PREPARE FOR DEPARTURE</p>
         <strong key={stage} aria-live="polite" aria-atomic="true">{stage || "LIFT OFF"}</strong>
